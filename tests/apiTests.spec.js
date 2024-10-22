@@ -22,7 +22,6 @@ test.describe('API challenge', () => {
         token = headers['x-challenger'];
         // Пример ассерта
         expect(headers).toEqual(expect.objectContaining({ 'x-challenger': expect.any(String) }));
-
         console.log(token);
     });
     // Тест для получения списка заданий
@@ -35,7 +34,7 @@ test.describe('API challenge', () => {
         let body = await response.json();
         let headers = await response.headers();
 
-        expect(response.status()).toBe(200);
+        expect(response.status()).toBe(200); // проверяем код ответа
         expect(headers).toEqual(expect.objectContaining({ 'x-challenger': token }));
         expect(body.challenges.length).toBe(59);
     });
@@ -47,7 +46,6 @@ test.describe('API challenge', () => {
         });
         let body = await response.json();
         let headers = await response.headers();
-        //console.log(body);
         expect(response.status()).toBe(200);
         expect(body).toHaveProperty('todos');
         expect(body.todos.length).toBe(10);
@@ -95,7 +93,6 @@ test.describe('API challenge', () => {
         });
 
         let headers = response.headers();
-
         expect(response.status()).toBe(200);
         expect(headers['x-challenger']).toEqual(token);
     });
@@ -108,7 +105,6 @@ test.describe('API challenge', () => {
         });
 
         let headers = response.headers();
-
         expect(response.status()).toBe(200);
         expect(headers['x-challenger']).toEqual(token);
     });
@@ -268,7 +264,7 @@ test.describe('API challenge', () => {
 
     test('Отправить POST запрос на создание задачи todos/ с превышением максимальной длины 5000 символов (413)/@POST', async ({ request }) => {
         const longTitle = 'a'.repeat(5000); // Создаем строку длиной 5000 символов
-        const validDescription = 'This is a valid description.'; // Оставляем описание в допустимых пределах
+        const validDescription = 'This is a valid description.';
         let response = await request.post(`${URL}/todos`, {
             headers: {
                 'x-challenger': token,
@@ -282,9 +278,6 @@ test.describe('API challenge', () => {
         });
 
         let body = await response.json();
-
-        //console.log('Response status:', response.status());
-        //console.log('Response body:', await response.json());
         expect(response.status()).toBe(413);
         expect(body.errorMessages || body.message).toContain('Error: Request body too large, max allowed is 5000 bytes');
     });
