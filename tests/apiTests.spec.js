@@ -26,7 +26,7 @@ test.describe.only('API challenge', () => {
         expect(headers).toEqual(expect.objectContaining({ 'x-challenger': expect.any(String) }));
         console.log(token);
     });
-    test('Тест №2, Получить список заданий/get/200 @api', async ({ request }) => {
+    test('Тест №2, Получить список заданий/get/200 @get', async ({ request }) => {
         let response = await request.get(`${URL}/challenges`, {
             headers: {
                 'x-challenger': token,
@@ -34,12 +34,9 @@ test.describe.only('API challenge', () => {
         });
         let body = await response.json();
         let headers = await response.headers();
-
         expect(response.status()).toBe(200);
-        // expect(headers).toEqual(expect.objectContaining({ 'x-challenger': token }));
-        //expect(body.challenges.length).toBe(59);
     });
-    test('Тест №3 Получить спиок /todos/get/200 @api', async ({ request }) => {
+    test('Тест №3 Получить спиок /todos/get/200 @get', async ({ request }) => {
         let response = await request.get(`${URL}/todos`, {
             headers: {
                 'x-challenger': token,
@@ -53,29 +50,17 @@ test.describe.only('API challenge', () => {
         console.log(token);
     });
 
-    test.only('Тест №4 Отправить GET запрос на /todo (404) @api', async ({ request }) => {
-        // Отправляем GET запрос на неправильный эндпоинт
+    test('Тест №4 Отправить GET запрос на /todo (404) @get', async ({ request }) => {
         let response = await request.get(`${URL}/todo`, {
             headers: {
                 'x-challenger': token,
             },
         });
         let headers = response.headers();
-        // Проверяем, что статус ответа равен 404
         expect(response.status()).toBe(404);
         expect(headers['x-challenger']).toEqual(token);
-
-        // Вы можете также проверить сообщение об ошибке, если оно доступно
-
-        //expect(response.status()).toBe(404);
-
-        //console.log(body);
-        //console.log(headers);
-
-        //expect(body).toHaveProperty('errorMessages');
-        //expect(body.errorMessages).toContain('Could not find an instance with todo');
     });
-    test('Тест №5 Отправить GET  запрос на существующий объект /todos/{id}/200 @api', async ({ request }) => {
+    test('Тест №5 Отправить GET  запрос на существующий объект /todos/{id}/200 @get', async ({ request }) => {
         let id = 9;
         let response = await request.get(`${URL}/todos/9`, {
             headers: {
@@ -88,7 +73,7 @@ test.describe.only('API challenge', () => {
         expect(response.status()).toBe(200);
         expect(headers['x-challenger']).toEqual(token);
     });
-    test(' Тест №6 GET /todos/{id} (404) для несуществующего todo, @api', async ({ request }) => {
+    test('Тест №6 GET /todos/{id} (404) для несуществующего todo, @get', async ({ request }) => {
         const nonExistentId = 9999;
         const response = await request.get(`${URL}/todos/${nonExistentId}`, {
             headers: {
@@ -98,13 +83,12 @@ test.describe.only('API challenge', () => {
 
         expect(response.status()).toBe(404);
         const responseBody = await response.text();
-        // console.log('Response Body:', responseBody);
         const body = JSON.parse(responseBody);
         expect(body).toHaveProperty('errorMessages');
         expect(body.errorMessages).toContain('Could not find an instance with todos/9999');
     });
 
-    test('Тест №7 Отправить GET запрос GET c фильтром запроса /todos (200) @api', async ({ request }) => {
+    test('Тест №7 Отправить GET запрос GET c фильтром запроса /todos (200) @get', async ({ request }) => {
         let filter = {
             doneStatus: true,
         };
@@ -121,7 +105,7 @@ test.describe.only('API challenge', () => {
         expect(headers['x-challenger']).toEqual(token);
     });
 
-    test('Тест №8 Отправить запрос HEAD /todos/200 @api', async ({ request }) => {
+    test('Тест №8 Отправить запрос HEAD /todos/200 @HEAD', async ({ request }) => {
         let response = await request.head(`${URL}/todos`, {
             headers: {
                 'x-challenger': token,
@@ -133,7 +117,7 @@ test.describe.only('API challenge', () => {
         expect(headers['x-challenger']).toEqual(token);
     });
 
-    test('Тест №9 Отправить POST запрос /todos @api', async ({ request }) => {
+    test('Тест №9 Отправить POST запрос /todos @post', async ({ request }) => {
         let response = await request.post(`${URL}/todos`, {
             headers: {
                 'x-challenger': token,
@@ -145,7 +129,7 @@ test.describe.only('API challenge', () => {
         expect(response.status()).toBe(201);
         expect(headers['x-challenger']).toEqual(token);
     });
-    test('Тест №10 Отправить POST запрос  на создания задачи todos/ 400 @api', async ({ request }) => {
+    test('Тест №10 Отправить POST запрос  на создания задачи todos/ 400 @post', async ({ request }) => {
         let response = await request.post(`${URL}/todos`, {
             headers: {
                 'x-challenger': token,
@@ -163,7 +147,7 @@ test.describe.only('API challenge', () => {
         expect(headers['x-challenger']).toEqual(token);
     });
 
-    test('Тест №11 Отправить POST запрос на создание задачи todos/ c ошибкой в длине заголовка 400 @api', async ({ request }) => {
+    test('Тест №11 Отправить POST запрос на создание задачи todos/ c ошибкой в длине заголовка 400 @post', async ({ request }) => {
         const longTitle = 'a'.repeat(60);
 
         let response = await request.post(`${URL}/todos`, {
@@ -184,7 +168,7 @@ test.describe.only('API challenge', () => {
         expect(headers['x-challenger']).toEqual(token);
     });
 
-    test('Тест №12 Отправить POST запрос на создание задачи todos/ c ошибкой longDescription 400 @api', async ({ request }) => {
+    test('Тест №12 Отправить POST запрос на создание задачи todos/ c ошибкой longDescription 400 @post', async ({ request }) => {
         const longDescription = 'a'.repeat(256);
 
         let response = await request.post(`${URL}/todos`, {
@@ -205,7 +189,7 @@ test.describe.only('API challenge', () => {
         expect(headers['x-challenger']).toEqual(token);
     });
 
-    test('Тест №13 Отправить POST запрос на создание задачи todos/ c ошибкой в длине описания 400 @api ', async ({ request }) => {
+    test('Тест №13 Отправить POST запрос на создание задачи todos/ c ошибкой в длине описания 400 @post ', async ({ request }) => {
         const longDescription = 'a'.repeat(256);
 
         let response = await request.post(`${URL}/todos`, {
@@ -224,11 +208,9 @@ test.describe.only('API challenge', () => {
 
         expect(response.status()).toBe(400);
         expect(headers['x-challenger']).toEqual(token);
-        //expect(body).toHaveProperty('error');
-        //expect(body.error).toContain('длина');
     });
 
-    test('Тест №14 POST /todos (413) content too long @api', async ({ request }) => {
+    test('Тест №14 POST /todos (413) content too long @post', async ({ request }) => {
         const longDescription = 'a'.repeat(5001);
         const payload = {
             title: longDescription,
@@ -248,7 +230,7 @@ test.describe.only('API challenge', () => {
         expect(responseBody.errorMessages).toContain('Error: Request body too large, max allowed is 5000 bytes');
     });
 
-    test('Тест №15 Отправить POST запрос на создание задачи todos/ с недопустимым полем (400) @api', async ({ request }) => {
+    test('Тест №15 Отправить POST запрос на создание задачи todos/ с недопустимым полем (400) @post', async ({ request }) => {
         const invalidPayload = {
             title: 'Valid Title',
             doneStatus: false,
@@ -269,7 +251,7 @@ test.describe.only('API challenge', () => {
         expect(body.errorMessages || body.message).toContain('Could not find field: extraField');
     });
 
-    test('Тест №16 PUT /todos/{id} (400) @api', async ({ request }) => {
+    test('Тест №16 PUT /todos/{id} (400) @put', async ({ request }) => {
         const todoId = '1';
         const invalidPayload = {
             description: 'Updated description without title',
@@ -288,7 +270,7 @@ test.describe.only('API challenge', () => {
         const responseBody = await response.json();
     });
 
-    test('Тест №17 Успешное обновление задачи с помощью POST /todos/{id} (200) @api', async ({ request }) => {
+    test('Тест №17 Успешное обновление задачи с помощью POST /todos/{id} (200) @post', async ({ request }) => {
         const todoId = '1';
         const updatedPayload = {
             title: 'Updated Todo Title',
@@ -302,16 +284,13 @@ test.describe.only('API challenge', () => {
             },
             data: updatedPayload,
         });
-
-        //console.log('Response status:', response.status());
-        //console.log('Response body:', await response.json());
         expect(response.status()).toBe(200);
         const responseBody = await response.json();
         expect(responseBody.title).toBe(updatedPayload.title);
         expect(responseBody.doneStatus).toBe(updatedPayload.doneStatus);
     });
 
-    test('Тест №18 Попытка обновления несуществующей задачи POST /todos/{id} (404) @api', async ({ request }) => {
+    test('Тест №18 Попытка обновления несуществующей задачи POST /todos/{id} (404) @post', async ({ request }) => {
         const nonExistentTodoId = '9999';
         const updatedPayload = {
             title: 'Updated Todo Title',
@@ -326,13 +305,10 @@ test.describe.only('API challenge', () => {
             data: updatedPayload,
         });
         let body = await response.json();
-
-        //console.log('Response status:', response.status());
-        //console.log('Response body:', await response.json());
         expect(response.status()).toBe(404);
     });
 
-    test('Тест №19 Обновление существующей задачи PUT /todos/{id} full (200) @api', async ({ request }) => {
+    test('Тест №19 Обновление существующей задачи PUT /todos/{id} full (200) @put', async ({ request }) => {
         const todoId = '9';
         const updatedPayload = {
             title: 'Updated Todo Title',
@@ -347,17 +323,13 @@ test.describe.only('API challenge', () => {
             },
             data: updatedPayload,
         });
-
-        // console.log('Response status:', response.status());
-        // console.log('Response body:', await response.json());
-
         expect(response.status()).toBe(200);
         const responseBody = await response.json();
         expect(responseBody.title).toBe(updatedPayload.title);
         expect(responseBody.description).toBe(updatedPayload.description);
         expect(responseBody.doneStatus).toBe(updatedPayload.doneStatus);
     });
-    test('Тест №20 Частичное обновление существующей задачи PUT /todos/{id} partial (200) @api', async ({ request }) => {
+    test('Тест №20 Частичное обновление существующей задачи PUT /todos/{id} partial (200) @put', async ({ request }) => {
         const todoId = '9';
         const partialPayload = {
             title: 'Updated Todo Title',
@@ -370,16 +342,12 @@ test.describe.only('API challenge', () => {
             },
             data: partialPayload,
         });
-
-        //  console.log('Response status:', response.status());
-        //  console.log('Response body:', await response.json());
-
         expect(response.status()).toBe(200);
         const responseBody = await response.json();
         expect(responseBody.title).toBe(partialPayload.title);
     });
 
-    test('Тест №21 PUT /todos/{id} no title (400) @api', async ({ request }) => {
+    test('Тест №21 PUT /todos/{id} no title (400) @put', async ({ request }) => {
         const todoId = '5';
         expect(todoId).toBeDefined();
         const invalidPayload = {
@@ -394,16 +362,13 @@ test.describe.only('API challenge', () => {
             data: invalidPayload,
         });
         let headers = response.headers();
-        //console.log(headers);
-
         let body = await response.json();
-        // console.log(body);
         expect(response.status()).toBe(400);
         const responseBody = await response.json();
         expect(responseBody.errorMessages).toContain('title : field is mandatory');
     });
 
-    test('Тест №22 PUT /todos/{id} no amend id (400) @api', async ({ request }) => {
+    test('Тест №22 PUT /todos/{id} no amend id (400) @put', async ({ request }) => {
         const todoId = '5';
         expect(todoId).toBeDefined();
         const payloadWithDifferentId = {
@@ -423,7 +388,7 @@ test.describe.only('API challenge', () => {
         expect(responseBody.errorMessages).toContain('Can not amend id from 5 to 123456');
     });
 
-    test('Тест №23 Удаление задачи DELETE /todos/{id} (200) @api', async ({ request }) => {
+    test('Тест №23 Удаление задачи DELETE /todos/{id} (200) @get', async ({ request }) => {
         const todoId = '5';
         let getResponse = await request.get(`${URL}/todos/${todoId}`, {
             headers: {
@@ -449,15 +414,12 @@ test.describe.only('API challenge', () => {
         expect(getResponse.status()).toBe(404);
     });
 
-    test('Тест №24 OPTIONS /todos (200) @api', async ({ request }) => {
+    test('Тест №24 OPTIONS /todos (200) @options', async ({ request }) => {
         let response = await request.options(`${URL}/todos`, {
             headers: {
                 'x-challenger': token,
             },
         });
-
-        // console.log('Response status:', response.status());
-        //console.log('Response headers:', response.headers());
         expect(response.status()).toBe(200);
         const allowHeader = response.headers()['allow'];
         const expectedMethods = 'GET, POST, PUT, DELETE';
@@ -465,7 +427,7 @@ test.describe.only('API challenge', () => {
         expect(allowHeader).toBe(expectedMethods); // не получилось;
     });
 
-    test('Тест №25 GET /todos должен возвращать 200 с ответом в формате XML @api', async ({ request }) => {
+    test('Тест №25 GET /todos должен возвращать 200 с ответом в формате XML @get', async ({ request }) => {
         let response = await request.get(`${URL}/todos`, {
             headers: {
                 Accept: 'application/xml',
@@ -480,7 +442,7 @@ test.describe.only('API challenge', () => {
         expect(body).toMatch(/^<todos>/);
     });
 
-    test('Тест №26 GET /todos должен возвращать 200 с ответом в формате JSON @api', async ({ request }) => {
+    test('Тест №26 GET /todos должен возвращать 200 с ответом в формате JSON @get', async ({ request }) => {
         let response = await request.get(`${URL}/todos`, {
             headers: {
                 Accept: 'application/json',
@@ -495,7 +457,7 @@ test.describe.only('API challenge', () => {
         expect(body).toBeDefined();
         expect(typeof body).toBe('object');
     });
-    test('Тест №27 GET /todos должен возвращать 200 с ответом в формате JSON/Accept: */* @api', async ({ request }) => {
+    test('Тест №27 GET /todos должен возвращать 200 с ответом в формате JSON/Accept: */* @get', async ({ request }) => {
         const response = await request.get(`${URL}/todos`, {
             headers: {
                 Accept: '*/*',
@@ -509,7 +471,7 @@ test.describe.only('API challenge', () => {
         expect(typeof body).toBe('object');
     });
 
-    test('Тест №28 GET /todos должен возвращать 200 с ответом в формате XML (предпочтение application/xml) @api', async ({ request }) => {
+    test('Тест №28 GET /todos должен возвращать 200 с ответом в формате XML (предпочтение application/xml) @get', async ({ request }) => {
         const response = await request.get(`${URL}/todos`, {
             headers: {
                 Accept: 'application/xml, application/json',
@@ -523,7 +485,7 @@ test.describe.only('API challenge', () => {
         expect(typeof body).toBe('string'); // не получилось
     });
 
-    test('Тест №29 GET /todos должен возвращать 200 с ответом в формате JSON (без заголовка Accept) @api', async ({ request }) => {
+    test('Тест №29 GET /todos должен возвращать 200 с ответом в формате JSON (без заголовка Accept) @get', async ({ request }) => {
         const response = await request.get(`${URL}/todos`);
         expect(response.status()).toBe(200);
         const contentType = response.headers()['content-type'];
@@ -533,7 +495,7 @@ test.describe.only('API challenge', () => {
         expect(typeof body).toBe('object'); // не получилось
     });
 
-    test('Тест №31 POST /todos должен создавать задачу с использованием XML @api', async ({ request }) => {
+    test('Тест №31 POST /todos должен создавать задачу с использованием XML @post', async ({ request }) => {
         const xmlData = `<?xml version="1.0" encoding="UTF-8" ?> 
         <title> "New Title"</title>
         <doneStatus>true</doneStatus>
@@ -555,7 +517,7 @@ test.describe.only('API challenge', () => {
         expect(body).toContain('<todo>');
     });
 
-    test('Тест №24 Отправить запрос GET /challenger/guid (existing X-CHALLENGER) @api', async ({ request }) => {
+    test('Тест №24 Отправить запрос GET /challenger/guid (existing X-CHALLENGER) @get', async ({ request }) => {
         let response = await request.get(`${URL}/challenger/${token}`, {
             headers: {
                 'x-challenger': token,
@@ -567,7 +529,7 @@ test.describe.only('API challenge', () => {
         expect(headers['x-challenger']).toEqual(token);
     });
 
-    test('Тест №25 Отправить запрос 	PUT /challenger/guid RESTORE @api', async ({ request }) => {
+    test('Тест №25 Отправить запрос 	PUT /challenger/guid RESTORE @put', async ({ request }) => {
         let response = await request.put(`${URL}/challenger/${token}`, {
             headers: {
                 'x-challenger': token,
@@ -579,7 +541,7 @@ test.describe.only('API challenge', () => {
         expect(response.status()).toBe(200);
         expect(headers['x-challenger']).toEqual(token);
     });
-    test('Тест №26 GET /todos должен возвращать 200 с ответом в формате JSON/Accept: /*,  , @api', async ({ request }) => {
+    test('Тест №26 GET /todos должен возвращать 200 с ответом в формате JSON/Accept: /*,  , @get', async ({ request }) => {
         const response = await request.get(`${URL}/todos`, {
             headers: {
                 Accept: '*/*',
@@ -594,7 +556,7 @@ test.describe.only('API challenge', () => {
         expect(typeof body).toBe('object');
     });
 
-    test('Тест №28 Запрос GET на конечную точку /todos с заголовком Accept , чтобы получить результаты в предпочтительном формате json , @api', async ({
+    test('Тест №28 Запрос GET на конечную точку /todos с заголовком Accept , чтобы получить результаты в предпочтительном формате json , @get', async ({
         request,
     }) => {
         const response = await request.get(`${URL}/todos`, {
@@ -606,11 +568,11 @@ test.describe.only('API challenge', () => {
         expect(response.status()).toBe(200);
         const contentType = response.headers()['content-type'];
         expect(contentType).toContain('application/json');
-        const body = await response.json(); // Используем text(), так как ожидаем XML
+        const body = await response.json();
         expect(body).toBeDefined();
         expect(typeof body).toBe('object');
     });
-    test('Тест №29 Проверка конечной точки /todos с заголовком Accept: application/gzip и ожидаемым кодом состояния 406. , @api', async ({
+    test('Тест №29 Проверка конечной точки /todos с заголовком Accept: application/gzip и ожидаемым кодом состояния 406. , @get', async ({
         request,
     }) => {
         const response = await request.get(`${URL}/todos`, {
@@ -621,7 +583,7 @@ test.describe.only('API challenge', () => {
 
         expect(response.status()).toBe(406);
     });
-    test('Тест №31 Запрос POST на конечную точку /todos с заголовком Content-Type и Accept для XML @api', async ({ request }) => {
+    test('Тест №31 Запрос POST на конечную точку /todos с заголовком Content-Type и Accept для XML @post', async ({ request }) => {
         const xmlData = `<?xml version="1.0" encoding="UTF-8" ?> 
         <title> "New Title"</title>
         <doneStatus>true</doneStatus>
@@ -641,7 +603,7 @@ test.describe.only('API challenge', () => {
         const body = await response.text();
         expect(body).toBeDefined(); //да
     });
-    test('Тест №32 POST на конечную точку /todos с заголовком Content-Type и Accept для JSON, @api', async ({ request }) => {
+    test('Тест №32 POST на конечную точку /todos с заголовком Content-Type и Accept для JSON, @post', async ({ request }) => {
         const jsonData = {
             title: 'Новая задача',
             doneStatus: false,
@@ -658,12 +620,12 @@ test.describe.only('API challenge', () => {
         expect(response.status()).toBe(201);
         const contentType = response.headers()['content-type'];
         expect(contentType).toContain('application/json');
-        const body = await response.json(); // Поскольку мы ожидаем JSON, используем json()
+        const body = await response.json();
         expect(body).toBeDefined();
         expect(body.title).toBe(jsonData.title);
         expect(body.completed).toBe(jsonData.completed);
     });
-    test('Тест №33 POST запрос с неподдерживаемым типом контента, @api', async ({ request }) => {
+    test('Тест №33 POST запрос с неподдерживаемым типом контента, @post', async ({ request }) => {
         const response = await request.post(`${URL}/todos`, {
             headers: {
                 'content-type': faker.string.alpha(10),
@@ -674,7 +636,7 @@ test.describe.only('API challenge', () => {
 
         expect(response.status()).toBe(415);
     });
-    test('Тест №34 Отправить запрос GET /challenger/guid (existing X-CHALLENGER) @api', async ({ request }) => {
+    test('Тест №34 Отправить запрос GET /challenger/guid (existing X-CHALLENGER) @get', async ({ request }) => {
         let response = await request.get(`${URL}/challenger/${token}`, {
             headers: {
                 'x-challenger': token,
@@ -687,7 +649,7 @@ test.describe.only('API challenge', () => {
         expect(headers['x-challenger']).toEqual(token);
         expect(payload).toHaveProperty('challengeStatus');
     });
-    test('Тест №35 Отправить запрос PUT /challenger/guid для восстановления прогресса @api', async ({ request }) => {
+    test('Тест №35 Отправить запрос PUT /challenger/guid для восстановления прогресса @get', async ({ request }) => {
         let response = await request.get(`${URL}/challenger/${token}`, {
             headers: {
                 'x-challenger': token,
@@ -705,7 +667,7 @@ test.describe.only('API challenge', () => {
 
         expect(restoreResponse.status()).toBe(200);
     });
-    test('Тест№ 36 Восстановить прогресс челенджера с помощью PUT /challenger/guid @api', async ({ request }) => {
+    test('Тест№ 36 Восстановить прогресс челенджера с помощью PUT /challenger/guid @get', async ({ request }) => {
         let response = await request.get(`${URL}/challenger/${token}`, {
             headers: {
                 'X-CHALLENGER': token,
@@ -727,7 +689,7 @@ test.describe.only('API challenge', () => {
         expect(restorePayload).toHaveProperty('challengeStatus'); // не получилось
     });
 
-    test('Тест№37 Получить текущую базу данных задач пользователя с помощью GET /challenger/database/guid, @api', async ({ request }) => {
+    test('Тест№37 Получить текущую базу данных задач пользователя с помощью GET /challenger/database/guid, @get', async ({ request }) => {
         const response = await request.get(`${URL}/challenger/database/${token}`, {
             headers: {
                 'X-CHALLENGER': token,
@@ -742,7 +704,7 @@ test.describe.only('API challenge', () => {
         expect(task).toBeDefined();
     });
 
-    test('Тест №38 Восстановить базу данных Todos с помощью PUT @api', async ({ request }) => {
+    test('Тест №38 Восстановить базу данных Todos с помощью PUT @put', async ({ request }) => {
         const getResponse = await request.get(`${URL}/challenger/database/${token}`, {
             headers: {
                 'X-CHALLENGER': token,
@@ -770,7 +732,7 @@ test.describe.only('API challenge', () => {
         const updatedTodosDatabase = await updatedResponse.json();
         expect({ updatedTodosDatabase: 18, todosDatabase: 18 }).toEqual(expect.objectContaining({ updatedTodosDatabase: expect.any(Number) }));
     });
-    test('Тест №39 Создать новую задачу с помощью POST @api', async ({ request }) => {
+    test('Тест №39 Создать новую задачу с помощью POST @post', async ({ request }) => {
         const xmlData = `<?xml version="1.0" encoding="UTF-8" ?> 
         <title>"Новая задача"</title>
         <doneStatus>false</doneStatus>`;
@@ -787,7 +749,7 @@ test.describe.only('API challenge', () => {
         expect(createdTodo).toHaveProperty('id');
         expect(createdTodo.title).toBe('"Новая задача"');
     });
-    test('Тест №40 POST /todos JSON to XML @api', async ({ request }) => {
+    test('Тест №40 POST /todos JSON to XML @post', async ({ request }) => {
         let response = await request.post(`${URL}/todos`, {
             headers: {
                 'x-challenger': token,
@@ -807,7 +769,7 @@ test.describe.only('API challenge', () => {
         });
         expect(response.status()).toBe(405);
     });
-    test('Тест №42 PATCH /heartbeat (500) @api', async ({ request }) => {
+    test('Тест №42 PATCH /heartbeat (500) @patch', async ({ request }) => {
         let response = await request.patch(`${URL}/heartbeat`, {
             headers: {
                 'x-challenger': token,
@@ -817,18 +779,16 @@ test.describe.only('API challenge', () => {
         expect(response.status()).toBe(500);
     });
 
-    test('Тест №43 TRACE /heartbeat (501) @api', async ({ request }) => {
+    test('Тест №43 TRACE /heartbeat (501) @fetch', async ({ request }) => {
         let response = await request.fetch(`${URL}/heartbeat`, {
             method: 'TRACE',
             headers: {
                 'x-challenger': token,
             },
         });
-
-        // Проверяем, что статус ответа 501
         expect(response.status()).toBe(501);
     });
-    test('Тест №44 GET /heartbeat (204) @api', async ({ request }) => {
+    test('Тест №44 GET /heartbeat (204) @get', async ({ request }) => {
         let response = await request.get(`${URL}/heartbeat`, {
             headers: {
                 'x-challenger': token,
@@ -836,7 +796,7 @@ test.describe.only('API challenge', () => {
         });
         expect(response.status()).toBe(204);
     });
-    test('Тест №45 POST /heartbeat as DELETE (405) @api', async ({ request }) => {
+    test('Тест №45 POST /heartbeat as DELETE (405) @post', async ({ request }) => {
         const response = await request.post(`${URL}/heartbeat`, {
             headers: {
                 'X-HTTP-Method-Override': 'DELETE',
@@ -846,16 +806,16 @@ test.describe.only('API challenge', () => {
 
         expect(response.status()).toBe(405);
     });
-    test('Тест №46 POST /heartbeat as PATCH (500) @api', async ({ request }) => {
+    test('Тест №46 POST /heartbeat as PATCH (500) @post', async ({ request }) => {
         const response = await request.post(`${URL}/heartbeat`, {
             headers: {
                 'X-HTTP-Method-Override': 'PATCH',
-                'x-challenger': token, // Удалите, если не требуется
+                'x-challenger': token,
             },
         });
         expect(response.status()).toBe(500);
     });
-    test('Тест №47 POST /heartbeat as TRACE (501) @api', async ({ request }) => {
+    test('Тест №47 POST /heartbeat as TRACE (501) @post', async ({ request }) => {
         const response = await request.post(`${URL}/heartbeat`, {
             headers: {
                 'X-HTTP-Method-Override': 'TRACE',
@@ -864,7 +824,7 @@ test.describe.only('API challenge', () => {
         });
         expect(response.status()).toBe(501);
     });
-    test('Тест №48 Отправка POST c ошибкой  /secret/token @api', { tag: ['@API', '@POST'] }, async ({ request }) => {
+    test('Тест №48 Отправка POST c ошибкой  /secret/token @post', async ({ request }) => {
         let challenge = 48;
 
         let response = await request.post(`${URL}/secret/token`, {
@@ -878,7 +838,7 @@ test.describe.only('API challenge', () => {
         expect(response.status()).toBe(401);
     });
 
-    test('Тест №49 POST /secret/token (201) @api', async ({ request }) => {
+    test('Тест №49 POST /secret/token (201) @post', async ({ request }) => {
         let response = await request.post(`${URL}/secret/token`, {
             headers: {
                 'x-challenger': token,
@@ -890,7 +850,7 @@ test.describe.only('API challenge', () => {
         expect(response.status()).toBe(201);
     });
 
-    test('Тест №50 GET /secret/note (403) with invalid X-AUTH-TOKEN @api', async ({ request }) => {
+    test('Тест №50 GET /secret/note (403) with invalid X-AUTH-TOKEN @get', async ({ request }) => {
         const response = await request.get(`${URL}/secret/note`, {
             headers: {
                 'x-challenger': token,
@@ -899,7 +859,7 @@ test.describe.only('API challenge', () => {
         });
         expect(response.status()).toBe(403);
     });
-    test('Тест №51 GET /secret/note (401) without X-AUTH-TOKEN @api', async ({ request }) => {
+    test('Тест №51 GET /secret/note (401) without X-AUTH-TOKEN @get', async ({ request }) => {
         const response = await request.get(`${URL}/secret/note`, {
             headers: {
                 'x-challenger': token,
@@ -908,7 +868,7 @@ test.describe.only('API challenge', () => {
         });
         expect(response.status()).toBe(401);
     });
-    test('52 GET /secret/note (200) @api', async ({ request }) => {
+    test('Тест №52 GET /secret/note (200) @get', async ({ request }) => {
         let response = await request.get(`${URL}/secret/note`, {
             headers: {
                 'x-challenger': token,
@@ -917,7 +877,7 @@ test.describe.only('API challenge', () => {
         });
         expect(response.status()).toBe(200); //не получилось
     });
-    test('53 Отправка POST /secret/note c записью @api', { tag: ['@API', '@POST'] }, async ({ request }) => {
+    test('Тест №53 Отправка POST /secret/note c записью @post', async ({ request }) => {
         let challenge = 53;
 
         let secret = new SecretService(request);
@@ -940,20 +900,19 @@ test.describe.only('API challenge', () => {
         let challengeStatus = await status.getChallengeStatus(token, challenge);
         expect(challengeStatus).toBe(true);
     });
-    test(' 54 POST /secret/note (401) when X-AUTH-TOKEN is missing @api', async ({ request }) => {
+    test('Тест  №54 POST /secret/note (401) when X-AUTH-TOKEN is missing @post', async ({ request }) => {
         const notePayload = { note: 'my note' };
 
         let response = await request.post(`${URL}/secret/note`, {
             headers: {
                 'x-challenger': token,
-                // 'X-AUTH-TOKEN' заголовок не добавляем, чтобы получить 401
             },
             data: notePayload,
         });
 
         expect(response.status()).toBe(401);
     });
-    test(' 55 POST /secret/note (403) when X-AUTH-TOKEN is invalid @api', async ({ request }) => {
+    test('Тест №55 POST /secret/note (403) when X-AUTH-TOKEN is invalid @post', async ({ request }) => {
         const notePayload = { note: 'my note' };
         let response = await request.post(`${URL}/secret/note`, {
             headers: {
@@ -966,9 +925,8 @@ test.describe.only('API challenge', () => {
         expect(response.status()).toBe(403);
     });
 
-    test('56 Отправка GET /secret/note c bearer токеном @api', { tag: ['@API', '@GET'] }, async ({ request }) => {
+    test('Тест №56 Отправка GET /secret/note c bearer токеном @get', async ({ request }) => {
         let challenge = 56;
-
         let secret = new SecretService(request);
         let secretToken = await secret.getSecretToken(token);
 
@@ -986,7 +944,7 @@ test.describe.only('API challenge', () => {
         let challengeStatus = await status.getChallengeStatus(token, challenge);
         expect(challengeStatus).toBe(true);
     });
-    test('Тест №57 Отправка POST /secret/note c bearer токеном @api', { tag: ['@API', '@POST'] }, async ({ request }) => {
+    test('Тест №57 Отправка POST /secret/note c bearer токеном @post', async ({ request }) => {
         let challenge = 57;
 
         let secret = new SecretService(request);
@@ -1010,7 +968,7 @@ test.describe.only('API challenge', () => {
         expect(challengeStatus).toBe(true);
     });
 
-    test(' 58 Удаление всех задач (todos) @api', async ({ request }) => {
+    test('Тест №58 Удаление всех задач (todos) @delete', async ({ request }) => {
         let responseTodos = await request.get(`${URL}/todos`, {
             headers: {
                 'x-challenger': token,
@@ -1031,7 +989,7 @@ test.describe.only('API challenge', () => {
             expect(headers['x-challenger']).toEqual(token);
         }
     });
-    test('59 Добавление максимального количества задач (todos) @api', { tag: ['@API', '@POST'] }, async ({ request }) => {
+    test('Тест №59 Добавление максимального количества задач (todos) @post', async ({ request }) => {
         let challenge = 59;
         let todoservice = new TodoService(request);
         let todoCount = await todoservice.getTodoCount(token);
