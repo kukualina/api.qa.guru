@@ -4,3 +4,4 @@
 /blob-report/
 /playwright/.cache/
 /e2e/
+node_modules/
