@@ -1,11 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { request } from 'http';
-const { faker } = require('@faker-js/faker');
-import { GetChalengeStatus } from './helpers';
-import { SecretService } from './helpers';
-import { TodoService } from './helpers';
+import { faker } from '@faker-js/faker';
+import { GetChalengeStatus, SecretService, TodoService } from './helpers';
 
-test.describe.only('API challenge', () => {
+test.describe('API challenge', () => {
     let URL = 'https://apichallenges.herokuapp.com';
     let token;
     let payload;
@@ -18,10 +15,8 @@ test.describe.only('API challenge', () => {
     };
 
     test.beforeAll(async ({ request }) => {
-        // Запросить ключ авторизации
         let response = await request.post(`${URL}/challenger`);
         let headers = response.headers();
-        // Передаем токен в тест
         token = headers['x-challenger'];
         expect(headers).toEqual(expect.objectContaining({ 'x-challenger': expect.any(String) }));
         console.log(token);
@@ -226,7 +221,6 @@ test.describe.only('API challenge', () => {
         });
         expect(response.status()).toBe(413);
         const responseBody = await response.json();
-        // console.log(responseBody);
         expect(responseBody.errorMessages).toContain('Error: Request body too large, max allowed is 5000 bytes');
     });
 
@@ -372,7 +366,7 @@ test.describe.only('API challenge', () => {
         const todoId = '5';
         expect(todoId).toBeDefined();
         const payloadWithDifferentId = {
-            id: '123456', // Здесь мы указываем другой ID
+            id: '123456',
             description: 'Updated description',
             doneStatus: true,
         };
@@ -424,7 +418,7 @@ test.describe.only('API challenge', () => {
         const allowHeader = response.headers()['allow'];
         const expectedMethods = 'GET, POST, PUT, DELETE';
 
-        expect(allowHeader).toBe(expectedMethods); // не получилось;
+        expect(allowHeader).toBe(expectedMethods);
     });
 
     test('Тест №25 GET /todos должен возвращать 200 с ответом в формате XML @get', async ({ request }) => {
@@ -482,7 +476,7 @@ test.describe.only('API challenge', () => {
         expect(contentType).toContain('application/xml');
         const body = await response.text();
         expect(body).toBeDefined();
-        expect(typeof body).toBe('string'); // не получилось
+        expect(typeof body).toBe('string');
     });
 
     test('Тест №29 GET /todos должен возвращать 200 с ответом в формате JSON (без заголовка Accept) @get', async ({ request }) => {
@@ -492,7 +486,7 @@ test.describe.only('API challenge', () => {
         expect(contentType).toContain('application/json');
         const body = await response.json();
         expect(body).toBeDefined();
-        expect(typeof body).toBe('object'); // не получилось
+        expect(typeof body).toBe('object');
     });
 
     test('Тест №31 POST /todos должен создавать задачу с использованием XML @post', async ({ request }) => {
@@ -686,7 +680,7 @@ test.describe.only('API challenge', () => {
 
         expect(restoreResponse.status()).toBe(200);
         let restorePayload = await restoreResponse.json();
-        expect(restorePayload).toHaveProperty('challengeStatus'); // не получилось
+        expect(restorePayload).toHaveProperty('challengeStatus');
     });
 
     test('Тест№37 Получить текущую базу данных задач пользователя с помощью GET /challenger/database/guid, @get', async ({ request }) => {
@@ -699,7 +693,6 @@ test.describe.only('API challenge', () => {
         expect(response.status()).toBe(200);
         const todosDatabase = await response.json();
         expect(todosDatabase).toHaveProperty('todos');
-        // console.log(todosDatabase);
         const task = todosDatabase.todos.find((todo) => todo.id === 3 && todo.title === 'process payments');
         expect(task).toBeDefined();
     });
@@ -719,7 +712,7 @@ test.describe.only('API challenge', () => {
                 'X-CHALLENGER': token,
                 'Content-Type': 'application/json',
             },
-            data: JSON.stringify(todosDatabase), // Используем полезную нагрузку из GET-запроса
+            data: JSON.stringify(todosDatabase),
         });
 
         expect(putResponse.status()).toBe(204);
@@ -875,7 +868,7 @@ test.describe.only('API challenge', () => {
                 'X-AUTH-TOKEN': xAuthToken,
             },
         });
-        expect(response.status()).toBe(200); //не получилось
+        expect(response.status()).toBe(200);
     });
     test('Тест №53 Отправка POST /secret/note c записью @post', async ({ request }) => {
         let challenge = 53;
