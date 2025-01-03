@@ -12,12 +12,15 @@
   "license": "ISC",
   "dependencies": {
     "@faker-js/faker": "^9.3.0",
+    "allure": "^3.0.0-beta.4",
+    "dotenv": "^16.4.7",
     "jsdom": "^25.0.1"
   },
   "devDependencies": {
     "@playwright/test": "^1.49.1",
     "@types/node": "^22.8.6",
     "allure-commandline": "^2.32.0",
+    "allure-playwright": "^3.0.7",
     "playwright": "^1.49.1"
   },
   "directories": {
