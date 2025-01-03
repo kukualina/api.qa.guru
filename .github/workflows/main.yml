@@ -1,0 +1,35 @@
+name: CI
+
+on:
+    workflow_dispatch: # ручной запуск
+    schedule:
+        - cron: '0 0 * * *' # автоматический запуск в полночь
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v2
+              with:
+                  node-version: '16' # используйте вашу версию Node.js
+
+            - name: Install dependencies
+              run: npm install
+
+            - name: Run Playwright tests
+              run: npx playwright test --reporter=allure-playwright
+
+            - name: Generate Allure report
+              run: |
+                  npx allure generate allure-results --clean -o allure-report
+
+            - name: Deploy Allure report to GitHub Pages
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  publish_dir: ./allure-report
